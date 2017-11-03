@@ -1,0 +1,20 @@
+org.quartz.scheduler.instanceName = quartz-scheduler
+org.quartz.scheduler.instanceId = AUTO
+org.quartz.threadPool.threadCount = 50
+
+org.quartz.jobStore.misfireThreshold = 1000
+org.quartz.jobStore.isClustered = true
+org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+org.quartz.jobStore.tablePrefix = QRTZ_
+org.quartz.jobStore.dataSource = quartz
+
+org.quartz.dataSource.quartz.provider = hikaricp
+#org.quartz.dataSource.quartz.driver = com.mysql.cj.jdbc.Driver
+org.quartz.dataSource.quartz.driver = com.mysql.jdbc.Driver
+#org.quartz.dataSource.quartz.URL = jdbc:mysql://localhost:3306/quartz?serverTimezone=UTC&useSSL=true
+org.quartz.dataSource.quartz.URL = jdbc:mysql://localhost:3306/quartz?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+org.quartz.dataSource.quartz.user = root
+org.quartz.dataSource.quartz.password = root
+org.quartz.dataSource.quartz.maxConnections = 20
+org.quartz.dataSource.quartz.validationQuery = select 1

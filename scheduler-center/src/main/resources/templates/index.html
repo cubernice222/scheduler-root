@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>定时任务</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta http-equiv="Cache-Control" content="no-store"/>
+	<meta http-equiv="Cache-Control" content="no-cache"/>
+	<meta http-equiv="Pragma" content="no-cache"/>
+	<meta http-equiv="Expires" content="0"/>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+<h2 class="txt_center">定时任务</h2>
+<br>
+	<div class="time_lists">
+		<h2 class="time_title">任务列表</h2>
+		<table align="center" border="1" cellpadding="0" cellspacing="1" width="100%" class="table_bor">
+			<thead align="center">
+				<th>应用名</th>
+				<th>任务</th>
+				<th>任务组</th>
+				<th>任务名</th>
+				<th>时间表达式</th>
+				<th>状态</th>
+				<th>操作</th>
+			</thead>
+			<tbody align="center">
+				<tr th:each="task : ${taskList}">
+					<td th:text="${task.appName}"></td>
+					<td th:text="${task.taskJobName}"></td>
+					<td th:text="${task.group}"></td>
+					<td th:text="${task.jobName}"></td>
+					<td class="time_express" th:text="${task.expression}"></td>
+					<td th:text="${task.stateDesc}"></td>
+					<td th:if="${task.stateDesc=='暂停'}" >
+						<button class="btn stop" th:attr="group=${task.group},jobName=${task.jobName}" onclick="restart(this)">启用</button>
+						<button class="btn stop" th:attr="group=${task.group},jobName=${task.jobName}" onclick="deleteJob(this)">删除</button>
+						<button class="btn update" th:attr="group=${task.group},jobName=${task.jobName},expression=${task.expression}" onclick="initModifyForm(this)" data-toggle="modal" data-target="#myModal" >修改表达式</button>
+					</td>
+					<td th:if="${task.stateDesc=='正常'}" >
+						<button class="btn stop" th:attr="group=${task.group},jobName=${task.jobName}" onclick="forbid(this)">禁用</button>
+						<button class="btn stop" th:attr="group=${task.group},jobName=${task.jobName}" onclick="deleteJob(this)">删除</button>
+						<button class="btn update" th:attr="group=${task.group},jobName=${task.jobName},expression=${task.expression}" onclick="initModifyForm(this)" data-toggle="modal" data-target="#myModal" >修改表达式</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改时间表达式</h4>
+      </div>
+      <div class="modal-body">
+		  <form action="#">
+			时间表达式: <input id="cronExpression" class="time_express_val" type="text">
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="submit" class="btn btn-primary" onclick="modify()">确认修改</button>
+			  </div>
+		  </form>
+	  </div>
+  	</div>
+  </div>
+</div>
+
+<form th:action="@{/forbid.html}" id="forbidForm" th:object="${frontTask}" th:method="post">
+	<input type="hidden" id="forbidGroup" th:field="*{group}"/>
+	<input type="hidden" id="forbidJobName" th:field="*{jobName}"/>
+</form>
+
+<form th:action="@{/restart.html}" id="restartForm" th:object="${frontTask}" th:method="post">
+	<input type="hidden" id="restartGroup" th:field="*{group}"/>
+	<input type="hidden" id="restartJobName" th:field="*{jobName}"/>
+</form>
+
+<form th:action="@{/delete.html}" id="deleteForm" th:object="${frontTask}" th:method="post">
+	<input type="hidden" id="deleteGroup" th:field="*{group}"/>
+	<input type="hidden" id="deleteJobName" th:field="*{jobName}"/>
+</form>
+
+<form th:action="@{/modify.html}" id="modifyForm" th:object="${frontTask}" th:method="post">
+	<input type="hidden" id="modifyGroup" th:field="*{group}"/>
+	<input type="hidden" id="modifyJobName" th:field="*{jobName}"/>
+	<input type="hidden" id="modifyExpression" th:field="*{expression}"/>
+</form>
+
+	<script th:inline="JavaScript">
+		
+		function forbid(obj){
+			if(confirm('确定禁用该任务吗')){
+				$("#forbidGroup").val($(obj).attr("group"));
+                $("#forbidJobName").val($(obj).attr("jobName"));
+                $("#forbidForm").submit();
+             }
+		}
+
+        function restart(obj){
+            if(confirm('确定启用该任务吗')){
+                $("#restartGroup").val($(obj).attr("group"));
+                $("#restartJobName").val($(obj).attr("jobName"));
+                $("#restartForm").submit();
+            }
+        }
+
+        function deleteJob(obj){
+            if(confirm('确定删除该任务吗')){
+                $("#deleteGroup").val($(obj).attr("group"));
+                $("#deleteJobName").val($(obj).attr("jobName"));
+                $("#deleteForm").submit();
+            }
+        }
+
+        function initModifyForm(obj){
+            $("#modifyGroup").val($(obj).attr("group"));
+            $("#modifyJobName").val($(obj).attr("jobName"));
+            $("#cronExpression").val($(obj).attr("expression"));
+        }
+
+        function modify(){
+            var cronExpression = $("#cronExpression").val();
+            if(cronExpression==""){
+                alert("时间表达式不能为空！");
+                return;
+			}
+            if(confirm('确定修改该任务吗')){
+                $("#modifyExpression").val(cronExpression);
+                $("#modifyForm").submit();
+            }
+        }
+
+	</script>
+</body>
+</html>

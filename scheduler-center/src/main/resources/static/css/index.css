@@ -1,0 +1,38 @@
+*{margin:0;padding:0;font-family: microsoft yahei;}
+	a{text-decoration: none;}
+	.time_lists{margin:20px;}
+	.txt_center{text-align: center;}
+	.time_title{    
+		background-color: #EEEEEE;
+	    padding: 10px 0 10px 20px;
+	    border-top-left-radius: 5px;
+	    border-top-right-radius: 5px;
+	    border: 1px solid #ddd;
+	    border-bottom: none;
+	    font-weight: normal;
+	    font-size:20px;
+	    margin:0;
+
+	}
+	table th,table td{border:1px solid #ddd;padding:5px;text-align:center;}
+	.table_bor{border-collapse:collapse;}
+	.btns_wrap{border-radius: 5px;}
+	.buttons{display: inline-block;
+			  padding: 6px 12px;
+			  margin-bottom: 0;
+			  font-size: 14px;
+			  font-weight: normal;
+			  line-height: 1.42857143;
+			  text-align: center;
+			  white-space: nowrap;
+			  vertical-align: middle;
+			  -ms-touch-action: manipulation;
+			      touch-action: manipulation;
+			  cursor: pointer;
+			  -webkit-user-select: none;
+			     -moz-user-select: none;
+			      -ms-user-select: none;
+			          user-select: none;
+			  background-image: none;
+			  border: 1px solid transparent;
+			  border-radius: 4px;}
